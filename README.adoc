@@ -1,0 +1,28 @@
+= Mini Oled Screen
+
+== Board
+
+Works with the following board, installed via Board Manager:
+
+* Arduino AVR Boards -> Nano
+
+Upload via
+
+* Tools -> Port: *usbserial*
+* Tools -> Processor: ATmega328P (Old Bootloader)
+
+== Libraries
+
+Make sure the following libraries are installed via Library Manager:
+
+* Adafruit GFX Library >= 1.11.7
+* Adafruit SSD1306 Wemos Mini OLED >= 1.1.2
+
+== Acknowledgements 
+
+With the help from:
+
+* Files -> Examples -> Adafruit SSD1306 Wemos Mini OLED -> ssd1306_64x48_i2c
+* http://javl.github.io/image2cpp/
+* https://siytek.com/wemos-d1-mini-oled-64x48-shield/
+
