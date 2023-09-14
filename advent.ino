@@ -59,28 +59,30 @@ void setup()   {
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 64x48)
 }
 
-int animate = 0;
+int animateFlakes = 0;
 
 void loop() {
-  // read the state of the pushbutton value:
   int button1State = digitalRead(button1Pin);
   int button2State = digitalRead(button2Pin);
   int button3State = digitalRead(button3Pin);
   int button4State = digitalRead(button4Pin);
 
-  // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
   if (button1State == LOW) {
-    animate = 0;
+    animateFlakes = 0;
     onButton1Push();
   } else if(button2State == LOW) {
-    animate = 0;
+    animateFlakes = 0;
     onButton2Push();
   } else if(button3State == LOW) {
-    animate = 0;
+    animateFlakes = 0;
     onButton3Push();
   } else if(button4State == LOW) {
-    animate = 0;
+    animateFlakes = 1;
     onButton4Push();
+  }
+
+  if(animateFlakes){
+    animateStars(logo16_glcd_bmp, LOGO16_GLCD_HEIGHT, LOGO16_GLCD_WIDTH);
   }
 }
 
@@ -127,14 +129,12 @@ void onButton3Push(){
 }
 
 void onButton4Push(){
-  // draw a bitmap icon and 'animate' movement
-  testdrawbitmap(logo16_glcd_bmp, LOGO16_GLCD_HEIGHT, LOGO16_GLCD_WIDTH);
+  initStars(logo16_glcd_bmp, LOGO16_GLCD_HEIGHT, LOGO16_GLCD_WIDTH);
 }
 
-void testdrawbitmap(const uint8_t *bitmap, uint8_t w, uint8_t h) {
-  uint8_t icons[NUMFLAKES][3];
+uint8_t icons[NUMFLAKES][3];
 
-  // initialize
+void initStars(const uint8_t *bitmap, uint8_t w, uint8_t h) {
   for (uint8_t f=0; f< NUMFLAKES; f++) {
     icons[f][XPOS] = random(display.width());
     icons[f][YPOS] = 0;
@@ -148,28 +148,29 @@ void testdrawbitmap(const uint8_t *bitmap, uint8_t w, uint8_t h) {
     Serial.println(icons[f][DELTAY], DEC);
   }
 
-  animate = 1;
-  while (animate) {
-    // draw each icon
-    for (uint8_t f=0; f< NUMFLAKES; f++) {
-      display.drawBitmap(icons[f][XPOS], icons[f][YPOS], bitmap, w, h, WHITE);
-    }
-    display.display();
-    delay(200);
+  return icons;
+}
 
-    // then erase it + move it
-    for (uint8_t f=0; f< NUMFLAKES; f++) {
-      display.drawBitmap(icons[f][XPOS], icons[f][YPOS], bitmap, w, h, BLACK);
-      // move it
-      icons[f][YPOS] += icons[f][DELTAY];
-      // if its gone, reinit
-      if (icons[f][YPOS] > display.height()) {
-        icons[f][XPOS] = random(display.width());
-        icons[f][YPOS] = 0;
-        icons[f][DELTAY] = random(5) + 1;
-      }
+void animateStars(const uint8_t *bitmap, uint8_t w, uint8_t h){
+  // draw each icon
+  for (uint8_t f=0; f< NUMFLAKES; f++) {
+    display.drawBitmap(icons[f][XPOS], icons[f][YPOS], bitmap, w, h, WHITE);
+  }
+  display.display();
+  delay(200);
+
+  // then erase it + move it
+  for (uint8_t f=0; f< NUMFLAKES; f++) {
+    display.drawBitmap(icons[f][XPOS], icons[f][YPOS], bitmap, w, h, BLACK);
+    // move it
+    icons[f][YPOS] += icons[f][DELTAY];
+    // if its gone, reinit
+    if (icons[f][YPOS] > display.height()) {
+      icons[f][XPOS] = random(display.width());
+      icons[f][YPOS] = 0;
+      icons[f][DELTAY] = random(5) + 1;
     }
-   }
+  }
 }
 
 void testdrawchar(void) {
