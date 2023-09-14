@@ -18,6 +18,10 @@ Make sure the following libraries are installed via Library Manager:
 * Adafruit GFX Library >= 1.11.7
 * Adafruit SSD1306 Wemos Mini OLED >= 1.1.2
 
+== Wiring
+
+Assumes you have 4 buttons to D2, D3, D4 and D5.
+
 == Acknowledgements 
 
 With the help from:
