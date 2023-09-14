@@ -70,15 +70,19 @@ void loop() {
   if (button1State == LOW) {
     animateFlakes = 0;
     onButton1Push();
+    delay(4000);
   } else if(button2State == LOW) {
     animateFlakes = 0;
     onButton2Push();
+    delay(4000);
   } else if(button3State == LOW) {
     animateFlakes = 0;
     onButton3Push();
+    delay(4000);
   } else if(button4State == LOW) {
     animateFlakes = 1;
     onButton4Push();
+    delay(4000);
   }
 
   if(animateFlakes){
@@ -89,14 +93,6 @@ void loop() {
 void onButton1Push(){
   display.clearDisplay();
   testscrolltext();
-  delay(2000);
-  display.clearDisplay();
-
-  // // draw the first ~12 characters in the font
-  testdrawchar();
-  display.display();
-  delay(2000);
-  display.clearDisplay();
 }
 
 void onButton2Push(){
@@ -124,8 +120,6 @@ void onButton3Push(){
   display.invertDisplay(true);
   delay(1000);
   display.invertDisplay(false);
-  delay(1000);
-  display.clearDisplay();
 }
 
 void onButton4Push(){
@@ -152,6 +146,7 @@ void initStars(const uint8_t *bitmap, uint8_t w, uint8_t h) {
 }
 
 void animateStars(const uint8_t *bitmap, uint8_t w, uint8_t h){
+  display.clearDisplay();
   // draw each icon
   for (uint8_t f=0; f< NUMFLAKES; f++) {
     display.drawBitmap(icons[f][XPOS], icons[f][YPOS], bitmap, w, h, WHITE);
@@ -171,21 +166,6 @@ void animateStars(const uint8_t *bitmap, uint8_t w, uint8_t h){
       icons[f][DELTAY] = random(5) + 1;
     }
   }
-}
-
-void testdrawchar(void) {
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0,0);
-
-  for (uint8_t i=0; i < 168; i++) {
-    if (i == '\n') continue;
-    display.write(i);
-    if ((i > 0) && (i % 21 == 0))
-      display.println();
-  }
-  display.display();
-  delay(1);
 }
 
 void testscrolltext(void) {
@@ -210,4 +190,12 @@ void testscrolltext(void) {
   display.startscrolldiagleft(0x00, 0x07);
   delay(2000);
   display.stopscroll();
+}
+
+void testdrawcircle(void) {
+  for (int16_t i=0; i<display.height(); i+=2) {
+    display.drawCircle(display.width()/2, display.height()/2, i, WHITE);
+    display.display();
+    delay(1);
+  }
 }
