@@ -70,6 +70,22 @@ const int button2Pin = 3;
 const int button3Pin = 4;
 const int button4Pin = 5;
 
+enum Zustand {
+    WARTE, MACHE_INTERAKTION, ZEICHNE_STERNE
+};
+
+Zustand zustand;
+long letzerZustandInMillis;
+
+void setzeZustand(Zustand neuerZustand) {
+  zustand = neuerZustand;
+  letzerZustandInMillis = millis();
+}
+
+long millisSeitLetztemZustand() {
+  return millis() - letzerZustandInMillis;
+}
+
 void setup()   {
   Serial.begin(9600);
 
@@ -80,9 +96,9 @@ void setup()   {
 
   // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 64x48)
-}
 
-int animateFlakes = 0;
+  setzeZustand(WARTE);
+}
 
 void loop() {
   int button1State = digitalRead(button1Pin);
@@ -91,31 +107,44 @@ void loop() {
   int button4State = digitalRead(button4Pin);
 
   if (button1State == LOW) {
-    animateFlakes = 0;
+    setzeZustand(MACHE_INTERAKTION);
     onButton1Push();
-    delay(4000);
+    setzeZustand(WARTE);
   } else if(button2State == LOW) {
-    animateFlakes = 0;
+    setzeZustand(MACHE_INTERAKTION);
     onButton2Push();
-    delay(4000);
+    setzeZustand(WARTE);
   } else if(button3State == LOW) {
-    animateFlakes = 0;
+    setzeZustand(MACHE_INTERAKTION);
     onButton3Push();
-    delay(4000);
+    setzeZustand(WARTE);
   } else if(button4State == LOW) {
-    animateFlakes = 1;
-    onButton4Push();
-    delay(4000);
+    setzeZustand(WARTE);
   }
 
-  if(animateFlakes){
+  if(zustand == WARTE && millisSeitLetztemZustand() > 3000){
+    initiereSterne(stern_bmp, STERN_HEIGHT, STERN_WIDTH);
+    setzeZustand(ZEICHNE_STERNE);
+  }
+  if(zustand == ZEICHNE_STERNE){
     zeichneSterne(stern_bmp, STERN_HEIGHT, STERN_WIDTH);
   }
 }
 
 void onButton1Push(){
   display.clearDisplay();
-  testscrolltext();
+  display.setTextSize(1);
+  display.setCursor(0,0);
+  display.setTextColor(WHITE);
+  display.setTextSize(2);
+  display.println("Foto Mit");
+  display.display();
+  delay(3000);
+  zeichneBitmap(santa_bmp, SANTA_HEIGHT, SANTA_WIDTH);
+  delay(1000);
+  display.invertDisplay(true);
+  delay(1000);
+  display.invertDisplay(false);
 }
 
 void onButton2Push(){
@@ -125,7 +154,7 @@ void onButton2Push(){
   display.setCursor(0,0);
   display.println("Hello, world!");
   display.setTextColor(BLACK, WHITE); // 'inverted' text
-  display.println(3.141592);
+  display.println("Foto Mit");
   display.setTextSize(2);
   display.setTextColor(WHITE);
   display.print("0x"); display.println(0xDEADBEEF, HEX);
@@ -143,7 +172,7 @@ void onButton3Push(){
 }
 
 void onButton4Push(){
-  initiereSterne(stern_bmp, STERN_HEIGHT, STERN_WIDTH);
+
 }
 
 uint8_t icons[NUMFLAKES][3];
