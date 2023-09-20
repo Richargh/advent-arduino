@@ -275,7 +275,7 @@ void loop() {
     setzeZustand(ZEICHNE_STERNE);
   }
   if(zustand == ZEICHNE_STERNE){
-    if(millisSeitLetztemZustand() < 5000){
+    if(millisSeitLetztemZustand() < 15000){
       zeichneSterne(stern_bmp, STERN_HEIGHT, STERN_WIDTH);
     } else {
       setzeZustand(ZEICHNE_WERBUNG);
@@ -287,15 +287,15 @@ void loop() {
 }
 
 void zeichneWerbung(){
-  if(millisSeitLetztemZustand() < 3000){
+  if(millisSeitLetztemZustand() < 4000){
     zeichneBitmap(frohes_fest_bmp, LOGO_HEIGHT, LOGO_WIDTH);
-  } else if(millisSeitLetztemZustand() < 6000){
+  } else if(millisSeitLetztemZustand() < 8000){
     zeichneBitmap(wuenscht_bmp, LOGO_HEIGHT, LOGO_WIDTH);
-  } else if(millisSeitLetztemZustand() < 9000){
-    zeichneBitmap(gross_bmp, LOGO_HEIGHT, LOGO_WIDTH);
   } else if(millisSeitLetztemZustand() < 12000){
+    zeichneBitmap(gross_bmp, LOGO_HEIGHT, LOGO_WIDTH);
+  } else if(millisSeitLetztemZustand() < 16000){
     zeichneBitmap(meiers_bmp, LOGO_HEIGHT, LOGO_WIDTH);
-  } else if(millisSeitLetztemZustand() < 15000){
+  } else if(millisSeitLetztemZustand() < 20000){
     zeichneBitmap(eisenbahn_bmp, LOGO_HEIGHT, LOGO_WIDTH);
     setzeZustand(WARTE);
   }
@@ -303,13 +303,21 @@ void zeichneWerbung(){
 
 void onButton1Push(){
   zeichneBitmap(foto_mit_bmp, LOGO_HEIGHT, LOGO_WIDTH);
-  delay(3000);
+  delay(4000);
   zeichneBitmap(santa_bmp, LOGO_HEIGHT, LOGO_WIDTH);
   delay(1000);
   display.invertDisplay(true);
   delay(1000);
   display.invertDisplay(false);
-  delay(2000);
+  delay(1000);
+  display.invertDisplay(true);
+  delay(1000);
+  display.invertDisplay(false);
+  delay(1000);
+  display.invertDisplay(true);
+  delay(1000);
+  display.invertDisplay(false);
+  delay(3000);
 }
 
 void onButton2Push(){
